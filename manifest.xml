@@ -1,0 +1,11 @@
+<package>
+  <description brief="simulate an underwater camera">
+  simulate an underwater camera
+  </description>
+  <author>/</author>
+  <license></license>
+  <url>http://</url>
+  <logo>http://</logo>
+  <depend package="base/cmake" />
+  <depend package="gui/vizkit3d_ocean" />
+</package>

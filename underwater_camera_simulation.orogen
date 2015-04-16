@@ -1,0 +1,8 @@
+name "underwater_camera_simulation"
+
+import_types_from "underwater_camera_simulationTypes.hpp"
+
+task_context "Task" do
+    periodic 0.1
+end
+
