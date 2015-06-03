@@ -8,4 +8,5 @@
   <logo>http://</logo>
   <depend package="base/cmake" />
   <depend package="gui/vizkit3d_ocean" />
+  <depend package="gui/orogen/vizkit3d_world" />
 </package>

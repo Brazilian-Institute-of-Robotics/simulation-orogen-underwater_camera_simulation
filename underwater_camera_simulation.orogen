@@ -1,8 +1,29 @@
 name "underwater_camera_simulation"
 
+using_library "vizkit3d_world"
+using_library "vizkit3d_ocean-viz"
+using_library "frame_helper"
+
+using_task_library "vizkit3d_world"
+
+import_types_from "base"
 import_types_from "underwater_camera_simulationTypes.hpp"
 
 task_context "Task" do
+    subclasses "vizkit3d_world::Task"
+    needs_configuration
+
+    #
+    # set the camera position using a RigidBodyState structure
+    #
+    input_port('camera_position', 'base::samples::RigidBodyState')
+        .doc("set camera position.")
+
+    #
+    # return the frame with rendered image
+    #
+    output_port('frame', ro_ptr('base::samples::frame::Frame'))
+        .doc("returns the frame with rendered image")
+
     periodic 0.1
 end
-
