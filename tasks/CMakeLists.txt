@@ -1,7 +1,7 @@
 # Generated from orogen/lib/orogen/templates/tasks/CMakeLists.txt
 
 include(underwater_camera_simulationTaskLib)
-ADD_LIBRARY(${UNDERWATER_CAMERA_SIMULATION_TASKLIB_NAME} SHARED 
+ADD_LIBRARY(${UNDERWATER_CAMERA_SIMULATION_TASKLIB_NAME} SHARED
     ${UNDERWATER_CAMERA_SIMULATION_TASKLIB_SOURCES})
 add_dependencies(${UNDERWATER_CAMERA_SIMULATION_TASKLIB_NAME}
     regen-typekit)

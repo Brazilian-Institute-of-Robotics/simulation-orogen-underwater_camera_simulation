@@ -4,6 +4,8 @@
 #define UNDERWATER_CAMERA_SIMULATION_TASK_TASK_HPP
 
 #include "underwater_camera_simulation/TaskBase.hpp"
+#include <base/Eigen.hpp>
+#include <vizkit3d/Ocean.hpp>
 
 namespace underwater_camera_simulation {
 
@@ -25,7 +27,17 @@ namespace underwater_camera_simulation {
     {
 	friend class TaskBase;
     protected:
+        /**
+         * Plugin used to create the ocean environment visualization
+         */
+        vizkit3d::Ocean *oceanEnvPlugin;
 
+        /**
+         * copy the rendered frame to the buffer
+         * used to create a double buffer
+         */
+        base::samples::frame::Frame buffer;
+        RTT::extras::ReadOnlyPointer<base::samples::frame::Frame> cameraFrame;
 
 
     public:
@@ -33,14 +45,14 @@ namespace underwater_camera_simulation {
          * \param name Name of the task. This name needs to be unique to make it identifiable via nameservices.
          * \param initial_state The initial TaskState of the TaskContext. Default is Stopped state.
          */
-        Task(std::string const& name = "underwater_camera_simulation::Task", TaskCore::TaskState initial_state = Stopped);
+        Task(std::string const& name = "underwater_camera_simulation::Task");
 
         /** TaskContext constructor for Task 
          * \param name Name of the task. This name needs to be unique to make it identifiable for nameservices. 
          * \param engine The RTT Execution engine to be used for this task, which serialises the execution of all commands, programs, state machines and incoming events for a task. 
-         * \param initial_state The initial TaskState of the TaskContext. Default is Stopped state.
+         * 
          */
-        Task(std::string const& name, RTT::ExecutionEngine* engine, TaskCore::TaskState initial_state = Stopped);
+        Task(std::string const& name, RTT::ExecutionEngine* engine);
 
         /** Default deconstructor of Task
          */
