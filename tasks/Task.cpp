@@ -39,10 +39,21 @@ bool Task::startHook()
     if (! TaskBase::startHook())
         return false;
 
-    vizkit3dWorld->getWidget()->setCameraManipulator(vizkit3d::TRACKBALL_MANIPULATOR);
+    /**
+     * Apply the camera parameters
+     */
+    underwater_camera_simulation::CameraParams params = _camera_params.get();
+    vizkit3dWorld->setCameraParams((params.width <= 0) ? 800 : params.width,
+                                   (params.height <= 0) ? 600 : params.height,
+                                   params.horizontal_fov,
+                                   params.near,
+                                   params.far);
+
     vizkit3dWorld->getWidget()->addPlugin(oceanEnvPlugin);
     vizkit3dWorld->getWidget()->setEnvironmentPlugin(oceanEnvPlugin);
+
     vizkit3dWorld->postEnableGrabbing();
+
     //it is necessary call notifyEvents to process GUI events
     vizkit3dWorld->notifyEvents();
 
@@ -54,13 +65,21 @@ bool Task::startHook()
 }
 void Task::updateHook()
 {
-
     TaskBase::updateHook();
 
-    //change the camera position
-    base::samples::RigidBodyState cameraPos;
-    while (_camera_position.read(cameraPos) == RTT::NewData) {
-        vizkit3dWorld->setCameraPos(cameraPos);
+    base::samples::RigidBodyState cameraPose;
+    while (_camera_pose.read(cameraPose) == RTT::NewData) {
+        vizkit3dWorld->setTransformation(cameraPose);
+
+        /**
+         * set the camera position
+         * if the gui is showing and camera manipulator is enable the
+         * camera pose is set using the user inputs
+         */
+        if (!_show_gui.get() || !_enable_camera_manipulator.get()) {
+            //change the camera position
+            vizkit3dWorld->setCameraPose(cameraPose);
+        }
     }
 
     //grab the frame
@@ -94,4 +113,3 @@ void Task::cleanupHook()
 
     TaskBase::cleanupHook();
 }
-
