@@ -53,7 +53,7 @@ Orocos.run 'underwater_camera_simulation::Task' => 'uwcam' do
         #translate the camera position in the axis Z
         trans_x = trans_x + x * 0.1
         rbs.position = Eigen::Vector3.new(0, 0, trans_x)
-        uwcam_task.camera_position.writer.write(rbs);
+        uwcam_task.camera_pose.writer.write(rbs);
     end
  
     Vizkit.exec
