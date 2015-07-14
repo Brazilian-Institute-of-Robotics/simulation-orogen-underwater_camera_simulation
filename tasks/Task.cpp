@@ -19,8 +19,6 @@ Task::~Task()
 {
 }
 
-
-
 /// The following lines are template definitions for the various state machine
 // hooks defined by Orocos::RTT. See Task.hpp for more detailed
 // documentation about them.
@@ -30,14 +28,14 @@ bool Task::configureHook()
     if (! TaskBase::configureHook())
         return false;
 
-    oceanEnvPlugin = new vizkit3d::Ocean();
-
     return true;
 }
+
 bool Task::startHook()
 {
     if (! TaskBase::startHook())
         return false;
+
 
     /**
      * Apply the camera parameters
@@ -48,9 +46,6 @@ bool Task::startHook()
                                    params.horizontal_fov,
                                    params.near,
                                    params.far);
-
-    vizkit3dWorld->getWidget()->addPlugin(oceanEnvPlugin);
-    vizkit3dWorld->getWidget()->setEnvironmentPlugin(oceanEnvPlugin);
 
     vizkit3dWorld->postEnableGrabbing();
 
@@ -104,12 +99,24 @@ void Task::stopHook()
 }
 void Task::cleanupHook()
 {
+    TaskBase::cleanupHook();
+}
 
+void Task::onCreateWorld() {
+    TaskBase::onCreateWorld();
+
+    oceanEnvPlugin = new vizkit3d::Ocean();
+    vizkit3dWorld->getWidget()->addPlugin(oceanEnvPlugin);
+    vizkit3dWorld->getWidget()->setEnvironmentPlugin(oceanEnvPlugin);
+}
+
+void Task::onDestroyWorld() {
     //remove ocean plugin from memory
     if (oceanEnvPlugin){
+        vizkit3dWorld->getWidget()->removePlugin(oceanEnvPlugin);
         delete oceanEnvPlugin;
         oceanEnvPlugin = NULL;
     }
 
-    TaskBase::cleanupHook();
+    TaskBase::onDestroyWorld();
 }

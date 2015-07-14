@@ -32,6 +32,7 @@ namespace underwater_camera_simulation {
          */
         vizkit3d::Ocean *oceanEnvPlugin;
 
+
         /**
          * copy the rendered frame to the buffer
          * used to create a double buffer
@@ -115,6 +116,11 @@ namespace underwater_camera_simulation {
          * before calling start() again.
          */
         void cleanupHook();
+
+
+        virtual void onCreateWorld();
+
+        virtual void onDestroyWorld();
     };
 }
 
