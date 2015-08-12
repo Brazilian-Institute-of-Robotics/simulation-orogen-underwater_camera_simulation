@@ -52,10 +52,6 @@ bool Task::startHook()
     //it is necessary call notifyEvents to process GUI events
     vizkit3dWorld->notifyEvents();
 
-    //Init the buffer
-    Frame *frame = vizkit3dWorld->grabFrame();
-    buffer.init(*frame);
-
     return true;
 }
 void Task::updateHook()
@@ -64,8 +60,6 @@ void Task::updateHook()
 
     base::samples::RigidBodyState cameraPose;
     while (_camera_pose.read(cameraPose) == RTT::NewData) {
-        vizkit3dWorld->setTransformation(cameraPose);
-
         /**
          * set the camera position
          * if the gui is showing and camera manipulator is enable the
@@ -78,12 +72,10 @@ void Task::updateHook()
     }
 
     //grab the frame
-    Frame *frame = vizkit3dWorld->grabFrame();
-    buffer.init(*frame);
-
-    //write in the output frame port
-    cameraFrame.reset(&buffer);
-    _frame.write(cameraFrame);
+    std::auto_ptr<Frame> frame(new Frame());
+    vizkit3dWorld->grabFrame(*frame.get());
+    frame->time = cameraPose.time;
+    _frame.write(RTT::extras::ReadOnlyPointer<Frame>(frame.release()));
 }
 
 void Task::errorHook()

@@ -32,15 +32,6 @@ namespace underwater_camera_simulation {
          */
         vizkit3d::Ocean *oceanEnvPlugin;
 
-
-        /**
-         * copy the rendered frame to the buffer
-         * used to create a double buffer
-         */
-        base::samples::frame::Frame buffer;
-        RTT::extras::ReadOnlyPointer<base::samples::frame::Frame> cameraFrame;
-
-
     public:
         /** TaskContext constructor for Task
          * \param name Name of the task. This name needs to be unique to make it identifiable via nameservices.
