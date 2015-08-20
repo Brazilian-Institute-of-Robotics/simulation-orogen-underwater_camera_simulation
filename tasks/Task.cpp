@@ -28,6 +28,10 @@ bool Task::configureHook()
     if (! TaskBase::configureHook())
         return false;
 
+    oceanEnvPlugin = new vizkit3d::Ocean();
+    vizkit3dWorld->getWidget()->addPlugin(oceanEnvPlugin);
+    vizkit3dWorld->getWidget()->setEnvironmentPlugin(oceanEnvPlugin);
+
     return true;
 }
 
@@ -47,11 +51,7 @@ bool Task::startHook()
                                    params.near,
                                    params.far);
 
-    vizkit3dWorld->postEnableGrabbing();
-
-    //it is necessary call notifyEvents to process GUI events
-    vizkit3dWorld->notifyEvents();
-
+    vizkit3dWorld->enableGrabbing();
     return true;
 }
 void Task::updateHook()
@@ -79,25 +79,11 @@ void Task::errorHook()
 }
 void Task::stopHook()
 {
-    //disable grabbing
-    vizkit3dWorld->postDisableGrabbing();
-    vizkit3dWorld->notifyEvents();
+    vizkit3dWorld->disableGrabbing();
     TaskBase::stopHook();
 }
 void Task::cleanupHook()
 {
-    TaskBase::cleanupHook();
-}
-
-void Task::onCreateWorld() {
-    TaskBase::onCreateWorld();
-
-    oceanEnvPlugin = new vizkit3d::Ocean();
-    vizkit3dWorld->getWidget()->addPlugin(oceanEnvPlugin);
-    vizkit3dWorld->getWidget()->setEnvironmentPlugin(oceanEnvPlugin);
-}
-
-void Task::onDestroyWorld() {
     //remove ocean plugin from memory
     if (oceanEnvPlugin){
         vizkit3dWorld->getWidget()->removePlugin(oceanEnvPlugin);
@@ -105,5 +91,7 @@ void Task::onDestroyWorld() {
         oceanEnvPlugin = NULL;
     }
 
-    TaskBase::onDestroyWorld();
+    TaskBase::cleanupHook();
 }
+
+
