@@ -59,17 +59,12 @@ void Task::updateHook()
     TaskBase::updateHook();
 
     base::samples::RigidBodyState cameraPose;
-    while (_camera_pose.read(cameraPose) == RTT::NewData) {
-        /**
-         * set the camera position
-         * if the gui is showing and camera manipulator is enable the
-         * camera pose is set using the user inputs
-         */
-        if (!_show_gui.get() || !_enable_camera_manipulator.get()) {
-            //change the camera position
-            vizkit3dWorld->setCameraPose(cameraPose);
-        }
-    }
+    RTT::FlowStatus flow = _camera_pose.readNewest(cameraPose);
+    if (flow == RTT::NoData)
+        return;
+
+    if (flow == RTT::NewData)
+        vizkit3dWorld->setCameraPose(cameraPose);
 
     //grab the frame
     std::auto_ptr<Frame> frame(new Frame());
