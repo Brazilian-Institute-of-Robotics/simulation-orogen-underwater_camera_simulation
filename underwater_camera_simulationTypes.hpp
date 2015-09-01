@@ -14,18 +14,6 @@ namespace underwater_camera_simulation {
 
     struct CameraParams {
         /**
-         * the camera name
-         */
-        std::string camera_name;
-
-        /**
-         * camera link name
-         * the name of link which represents the camera
-         * the link position is used to map the camera position
-         */
-        std::string camera_link;
-
-        /**
          * camera parameters
          * the main camera parameters used by Gazebo
          */
