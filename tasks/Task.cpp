@@ -28,6 +28,10 @@ bool Task::configureHook()
     if (! TaskBase::configureHook())
         return false;
 
+    oceanEnvPlugin = new vizkit3d::Ocean();
+    vizkit3dWorld->getWidget()->addPlugin(oceanEnvPlugin);
+    vizkit3dWorld->getWidget()->setEnvironmentPlugin(oceanEnvPlugin);
+
     return true;
 }
 
@@ -47,11 +51,7 @@ bool Task::startHook()
                                    params.near,
                                    params.far);
 
-    vizkit3dWorld->postEnableGrabbing();
-
-    //it is necessary call notifyEvents to process GUI events
-    vizkit3dWorld->notifyEvents();
-
+    vizkit3dWorld->enableGrabbing();
     return true;
 }
 void Task::updateHook()
@@ -59,17 +59,12 @@ void Task::updateHook()
     TaskBase::updateHook();
 
     base::samples::RigidBodyState cameraPose;
-    while (_camera_pose.read(cameraPose) == RTT::NewData) {
-        /**
-         * set the camera position
-         * if the gui is showing and camera manipulator is enable the
-         * camera pose is set using the user inputs
-         */
-        if (!_show_gui.get() || !_enable_camera_manipulator.get()) {
-            //change the camera position
-            vizkit3dWorld->setCameraPose(cameraPose);
-        }
-    }
+    RTT::FlowStatus flow = _camera_pose.readNewest(cameraPose);
+    if (flow == RTT::NoData)
+        return;
+
+    if (flow == RTT::NewData)
+        vizkit3dWorld->setCameraPose(cameraPose);
 
     //grab the frame
     std::auto_ptr<Frame> frame(new Frame());
@@ -84,25 +79,11 @@ void Task::errorHook()
 }
 void Task::stopHook()
 {
-    //disable grabbing
-    vizkit3dWorld->postDisableGrabbing();
-    vizkit3dWorld->notifyEvents();
+    vizkit3dWorld->disableGrabbing();
     TaskBase::stopHook();
 }
 void Task::cleanupHook()
 {
-    TaskBase::cleanupHook();
-}
-
-void Task::onCreateWorld() {
-    TaskBase::onCreateWorld();
-
-    oceanEnvPlugin = new vizkit3d::Ocean();
-    vizkit3dWorld->getWidget()->addPlugin(oceanEnvPlugin);
-    vizkit3dWorld->getWidget()->setEnvironmentPlugin(oceanEnvPlugin);
-}
-
-void Task::onDestroyWorld() {
     //remove ocean plugin from memory
     if (oceanEnvPlugin){
         vizkit3dWorld->getWidget()->removePlugin(oceanEnvPlugin);
@@ -110,5 +91,7 @@ void Task::onDestroyWorld() {
         oceanEnvPlugin = NULL;
     }
 
-    TaskBase::onDestroyWorld();
+    TaskBase::cleanupHook();
 }
+
+

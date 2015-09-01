@@ -107,11 +107,6 @@ namespace underwater_camera_simulation {
          * before calling start() again.
          */
         void cleanupHook();
-
-
-        virtual void onCreateWorld();
-
-        virtual void onDestroyWorld();
     };
 }
 
