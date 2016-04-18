@@ -30,20 +30,6 @@ bool Task::configureHook()
      */
     underwater_camera_simulation::CameraParams params = _camera_params.get();
 
-    /**
-     * set the viewport size the scene size of the camera
-     */
-     if (params.width <=0 || params.height <=0)
-     {
-         std::invalid_argument("The camera width and height must be greater than zero");
-     }
-     else
-     {
-         _width.set(params.width);
-         _height.set(params.height);
-     }
-
-
     if (! TaskBase::configureHook())
         return false;
 
@@ -51,8 +37,8 @@ bool Task::configureHook()
     vizkit3dWorld->getWidget()->addPlugin(oceanEnvPlugin);
     vizkit3dWorld->getWidget()->setEnvironmentPlugin(oceanEnvPlugin);
 
-    vizkit3dWorld->setCameraParams(params.width,
-                                   params.height,
+    vizkit3dWorld->setCameraParams(_width.get(),
+                                   _height.get(),
                                    params.horizontal_fov,
                                    params.near,
                                    params.far);
