@@ -25,12 +25,23 @@ Task::~Task()
 
 bool Task::configureHook()
 {
+    /**
+     * Apply the camera parameters
+     */
+    underwater_camera_simulation::CameraParams params = _camera_params.get();
+
     if (! TaskBase::configureHook())
         return false;
 
     oceanEnvPlugin = new vizkit3d::Ocean();
     vizkit3dWorld->getWidget()->addPlugin(oceanEnvPlugin);
     vizkit3dWorld->getWidget()->setEnvironmentPlugin(oceanEnvPlugin);
+
+    vizkit3dWorld->setCameraParams(_width.get(),
+                                   _height.get(),
+                                   params.horizontal_fov,
+                                   params.near,
+                                   params.far);
 
     return true;
 }
@@ -40,16 +51,6 @@ bool Task::startHook()
     if (! TaskBase::startHook())
         return false;
 
-
-    /**
-     * Apply the camera parameters
-     */
-    underwater_camera_simulation::CameraParams params = _camera_params.get();
-    vizkit3dWorld->setCameraParams((params.width <= 0) ? 800 : params.width,
-                                   (params.height <= 0) ? 600 : params.height,
-                                   params.horizontal_fov,
-                                   params.near,
-                                   params.far);
 
     vizkit3dWorld->enableGrabbing();
     return true;

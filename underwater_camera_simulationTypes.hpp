@@ -17,8 +17,6 @@ namespace underwater_camera_simulation {
          * camera parameters
          * the main camera parameters used by Gazebo
          */
-        int width;
-        int height;
         double near;
         double far;
         double horizontal_fov;
