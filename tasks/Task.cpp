@@ -141,21 +141,18 @@ vizkit3d::OceanParameters Task::mapOceanParameters(const OceanParameters& ocean_
 
 QColor Task::vector3DToQColor(const base::Vector3d& vector) const
 {
-    std::cout << "vectorToColor " << vector[0] << " | " << vector[1] << " | " << vector[2] << std::endl;
     QColor qtcolor(vector[0], vector[1], vector[2]);
     return qtcolor;
 }
 
 QVector3D Task::vector3DToQVector3D(const base::Vector3d& vector) const
 {
-    std::cout << "vectorToVector3D " << vector[0] << " | " << vector[1] << " | " << vector[2] << std::endl;
     QVector3D qtvector3d(vector[0], vector[1], vector[2]);
     return qtvector3d;
 }
 
 QVector2D Task::vector2DToQVector2D(const base::Vector2d& vector) const
 {
-    std::cout << "vectorToVector2d " << vector[0] << " | " << vector[1] << std::endl;
     QVector2D qtvector2d(vector[0], vector[1]);
     return qtvector2d;
 }
