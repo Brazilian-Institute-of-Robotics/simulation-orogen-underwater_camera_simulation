@@ -33,7 +33,9 @@ bool Task::configureHook()
     if (! TaskBase::configureHook())
         return false;
 
-    oceanEnvPlugin = new vizkit3d::Ocean();
+    vizkit3d::OceanParameters ocean_params = mapOceanParameters(_ocean_params.get());
+    oceanEnvPlugin = new vizkit3d::Ocean(ocean_params);
+
     vizkit3dWorld->getWidget()->addPlugin(oceanEnvPlugin);
     vizkit3dWorld->getWidget()->setEnvironmentPlugin(oceanEnvPlugin);
 
@@ -95,4 +97,65 @@ void Task::cleanupHook()
     TaskBase::cleanupHook();
 }
 
+vizkit3d::OceanParameters Task::mapOceanParameters(const OceanParameters& ocean_params) const 
+{
+    vizkit3d::OceanParameters viz_ocean_params;
 
+    viz_ocean_params.surfDirty = ocean_params.surfDirty;
+    viz_ocean_params.surfEndless = ocean_params.surfEndless;
+    viz_ocean_params.surfWaveScale = ocean_params.surfWaveScale;
+    viz_ocean_params.surfDepth = ocean_params.surfDepth;
+    viz_ocean_params.surfWindDirection = vector2DToQVector2D(ocean_params.surfWindDirection);
+    viz_ocean_params.surfWindSpeed = ocean_params.surfWindSpeed;
+    viz_ocean_params.surfReflectionDamping = ocean_params.surfReflectionDamping;
+    viz_ocean_params.surfIsChoppy = ocean_params.surfIsChoppy;
+    viz_ocean_params.surfChoppyFactor = ocean_params.surfChoppyFactor;
+    viz_ocean_params.surfCrestFoam = ocean_params.surfCrestFoam;
+    viz_ocean_params.surfCrestFoamHeight = ocean_params.surfCrestFoamHeight;
+    viz_ocean_params.surfFoamBottomHeight = ocean_params.surfFoamBottomHeight;
+    viz_ocean_params.surfFoamTopHeight = ocean_params.surfFoamTopHeight;
+
+    viz_ocean_params.sceneDirty = ocean_params.sceneDirty;
+    viz_ocean_params.airFogColor = vector3DToQColor(ocean_params.airFogColor);
+    viz_ocean_params.airFogDensity = ocean_params.airFogDensity;
+    viz_ocean_params.sunPosition = vector3DToQVector3D(ocean_params.sunPosition); 
+    viz_ocean_params.sunDiffuseColor = vector3DToQColor(ocean_params.sunDiffuseColor);
+    viz_ocean_params.uwFogColor = vector3DToQColor(ocean_params.uwFogColor);
+    viz_ocean_params.uwFogDensity = ocean_params.uwFogDensity;
+    viz_ocean_params.uwAttenuation = vector3DToQVector3D(ocean_params.uwAttenuation);
+    viz_ocean_params.uwDiffuseColor = vector3DToQColor(ocean_params.uwDiffuseColor);
+    viz_ocean_params.glareAttenuation = ocean_params.glareAttenuation;
+
+    viz_ocean_params.reflections = ocean_params.reflections;
+    viz_ocean_params.refractions = ocean_params.refractions;
+    viz_ocean_params.heightmap = ocean_params.heightmap;
+    viz_ocean_params.godRays = ocean_params.godRays;
+    viz_ocean_params.silt = ocean_params.silt;
+    viz_ocean_params.underwaterDOF = ocean_params.underwaterDOF;
+    viz_ocean_params.underwaterScattering = ocean_params.underwaterScattering;
+    viz_ocean_params.distortion = ocean_params.distortion;
+    viz_ocean_params.glare = ocean_params.glare;
+    
+    return viz_ocean_params;
+}
+
+QColor Task::vector3DToQColor(const base::Vector3d& vector) const
+{
+    std::cout << "vectorToColor " << vector[0] << " | " << vector[1] << " | " << vector[2] << std::endl;
+    QColor qtcolor(vector[0], vector[1], vector[2]);
+    return qtcolor;
+}
+
+QVector3D Task::vector3DToQVector3D(const base::Vector3d& vector) const
+{
+    std::cout << "vectorToVector3D " << vector[0] << " | " << vector[1] << " | " << vector[2] << std::endl;
+    QVector3D qtvector3d(vector[0], vector[1], vector[2]);
+    return qtvector3d;
+}
+
+QVector2D Task::vector2DToQVector2D(const base::Vector2d& vector) const
+{
+    std::cout << "vectorToVector2d " << vector[0] << " | " << vector[1] << std::endl;
+    QVector2D qtvector2d(vector[0], vector[1]);
+    return qtvector2d;
+}

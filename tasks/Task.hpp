@@ -32,6 +32,11 @@ namespace underwater_camera_simulation {
          */
         vizkit3d::Ocean *oceanEnvPlugin;
 
+        vizkit3d::OceanParameters mapOceanParameters(const OceanParameters& ocean_params) const;
+        QColor vector3DToQColor(const base::Vector3d& vector) const;
+        QVector3D vector3DToQVector3D(const base::Vector3d& vector) const;
+        QVector2D vector2DToQVector2D(const base::Vector2d& vector) const;
+
     public:
         /** TaskContext constructor for Task
          * \param name Name of the task. This name needs to be unique to make it identifiable via nameservices.

@@ -23,6 +23,10 @@ task_context "Task" do
     #
     property("camera_params", "/underwater_camera_simulation/CameraParams")
     #
+    # ocean parameters
+    #
+    property("ocean_params", "/underwater_camera_simulation/OceanParameters")
+    #
     # set the camera position using a RigidBodyState structure
     #
     input_port('camera_pose', 'base::samples::RigidBodyState')
